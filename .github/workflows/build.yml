@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set $SHORT_SHA
+        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Setup AMXXPawn Compiler
         uses: wopox1337/setup-amxxpawn@v1
 
@@ -34,11 +37,11 @@ jobs:
           }
           export -f compile
 
-          # Найти и скомпилировать все .sma файлы в папке scripting
           find . -type f -name "*.sma" -exec bash -c 'compile "$0"' {} \;
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Server-Side_SmokeNade
+          name: Server-Side_SmokeNade-$SHORT_SHA
           path: cstrike
+          compression-level: 9
